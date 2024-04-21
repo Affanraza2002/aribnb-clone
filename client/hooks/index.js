@@ -6,6 +6,7 @@ import { PlaceContext } from '@/providers/PlaceProvider';
 
 import { getItemFromLocalStorage, setItemsInLocalStorage, removeItemFromLocalStorage } from '@/utils';
 import axiosInstance from '@/utils/axios';
+import axios from 'axios';
 
 // USER
 export const useAuth = () => {
@@ -26,9 +27,8 @@ export const useProvideAuth = () => {
 
     const register = async (formData) => {
         const { name, email, password } = formData;
-
         try {
-            const { data } = await axiosInstance.post('user/register', {
+            const { data } = await axios.post(`${import.meta.env.VITE_BASE_URL}user/register`, {
                 name,
                 email,
                 password,
@@ -50,7 +50,7 @@ export const useProvideAuth = () => {
         const { email, password } = formData;
 
         try {
-            const { data } = await axiosInstance.post('user/login', {
+            const { data } = await axios.post(`${import.meta.env.VITE_BASE_URL}user/login`, {
                 email,
                 password,
             });
@@ -70,7 +70,7 @@ export const useProvideAuth = () => {
     const googleLogin = async (credential) => {
         const decoded = jwt_decode(credential);
         try {
-            const { data } = await axiosInstance.post('user/google/login', {
+            const { data } = await axios.post(`${import.meta.env.VITE_BASE_URL}user/google/login`, {
                 name: `${decoded.given_name} ${decoded.family_name}`,
                 email: decoded.email,
             });
@@ -88,7 +88,7 @@ export const useProvideAuth = () => {
 
     const logout = async () => {
         try {
-            const { data } = await axiosInstance.get('/user/logout');
+            const { data } = await axiosInstance.get(`${import.meta.env.VITE_BASE_URL}user/logout`);
             if (data.success) {
                 setUser(null);
 
@@ -107,7 +107,7 @@ export const useProvideAuth = () => {
         try {
             const formData = new FormData()
             formData.append('picture', picture)
-            const { data } = await axiosInstance.post('/user/upload-picture', formData, {
+            const { data } = await axios.post(`${import.meta.env.VITE_BASE_URL}user/upload-picture`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             })
             return data
@@ -120,7 +120,7 @@ export const useProvideAuth = () => {
         const { name, password, picture } = userDetails;
         const email = JSON.parse(getItemFromLocalStorage('user')).email
         try {
-            const { data } = await axiosInstance.put('/user/update-user', {
+            const { data } = await axios.put(`${import.meta.env.VITE_BASE_URL}user/update-user`, {
                 name, password, email, picture
             })
             return data;
@@ -154,7 +154,7 @@ export const useProvidePlaces = () => {
     const [loading, setLoading] = useState(true);
 
     const getPlaces = async () => {
-        const { data } = await axiosInstance.get('/places');
+        const { data } = await axios.get(`${import.meta.env.VITE_BASE_URL}places`);
         setPlaces(data.places);
         setLoading(false);
     };

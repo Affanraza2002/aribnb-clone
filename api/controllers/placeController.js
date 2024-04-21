@@ -44,7 +44,7 @@ exports.userPlaces = async (req, res) => {
     res.status(200).json(await Place.find({ owner: id }));
   } catch (err) {
     res.status(500).json({
-      message: 'Internal serever error',
+      message: 'Internal server error',
     });
   }
 };
